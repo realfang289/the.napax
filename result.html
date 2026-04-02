@@ -51,12 +51,15 @@
 </div>
 
 <script>
+// ดึงค่า type จาก URL
 const params = new URLSearchParams(window.location.search);
 const type = params.get("type");
 
-let title = "";
-let desc = "";
+// กำหนดค่าเริ่มต้นกัน error
+let title = "ไม่พบผลลัพธ์";
+let desc = "กรุณาทำแบบทดสอบใหม่อีกครั้ง";
 
+// เงื่อนไขแต่ละประเภท
 if (type === "alpha") {
   title = "ALPHA QUEEN 👑";
   desc = `ผู้หญิง Alpha คือผู้นำโดยธรรมชาติที่มาพร้อมความมั่นใจเต็มเปี่ยมและบุคลิกที่น่าเกรงขาม
@@ -90,6 +93,7 @@ else if (type === "sigma") {
 เสน่ห์ที่น่าค้นหาของเธอมาจากความสงบนิ่งและตัวตนที่ชัดเจน ซึ่งจะเปิดเผยให้เพียงคนที่เธอเลือกเท่านั้นเห็น`;
 }
 
+// แสดงผล
 document.getElementById("title").innerText = title;
 document.getElementById("desc").innerText = desc;
 </script>
