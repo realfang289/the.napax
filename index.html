@@ -111,6 +111,7 @@ const questions = [
   }
 ];
 
+// โหลดคำถาม
 function loadQuiz() {
   const quizDiv = document.getElementById("quiz");
 
@@ -121,10 +122,12 @@ function loadQuiz() {
     q.answers.forEach(a => {
       const btn = document.createElement("button");
       btn.innerText = a.text;
+
       btn.onclick = () => {
         score[a.type]++;
         btn.style.background = "lightgreen";
       };
+
       div.appendChild(btn);
     });
 
@@ -132,8 +135,9 @@ function loadQuiz() {
   });
 }
 
+// คำนวณผล
 function showResult() {
-  let max = 0;
+  let max = -1;
   let resultType = "";
 
   for (let key in score) {
@@ -143,12 +147,18 @@ function showResult() {
     }
   }
 
-  document.getElementById("result").innerText =
-    "คุณเป็นสาย " + resultType.toUpperCase();
+  if (max === 0) {
+    alert("กรุณาเลือกคำตอบก่อนดูผลลัพธ์");
+    return;
+  }
+
+  window.location.href = "result.html?type=" + resultType;
 }
 
+// เรียกใช้งาน
 loadQuiz();
 </script>
 
 </body>
+</html>
 </html>
