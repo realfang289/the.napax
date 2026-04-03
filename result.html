@@ -1,74 +1,109 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>ผลลัพธ์ของคุณ</title>
+<meta charset="UTF-8">
 
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #0f0f0f;
-      color: white;
-      padding: 40px;
-    }
+<!-- 🔥 สำคัญมาก -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .box {
-      max-width: 700px;
-      margin: auto;
-      background: #1a1a1a;
-      padding: 30px;
-      border-radius: 20px;
-      text-align: center;
-      box-shadow: 0 0 40px rgba(255,255,255,0.05);
-    }
+<title>ผลลัพธ์ของคุณ</title>
 
-    h1 {
-      margin-bottom: 20px;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f0f;
+  color: white;
+}
 
-    /* ✅ แก้ตรงนี้ */
-    img {
-      width: 100%;
-      height: auto;
-      object-fit: contain;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      background: #000; /* กันขอบโปร่ง */
-    }
+/* container */
+.box {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
 
-    p {
-      opacity: 0.85;
-      white-space: pre-line;
-      text-align: left;
-    }
+/* title */
+h1 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
 
-    a {
-      display: inline-block;
-      margin-top: 30px;
-      border: 1px solid #444;
-      padding: 10px 20px;
-      text-decoration: none;
-      color: white;
-      border-radius: 10px;
-    }
+/* image */
+img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  background: #000;
+}
 
-    a:hover {
-      background: white;
-      color: black;
-    }
-  </style>
+/* text */
+p {
+  opacity: 0.85;
+  white-space: pre-line;
+  text-align: left;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ปุ่ม */
+.buttons {
+  margin-top: 25px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+/* hover desktop */
+.btn:hover {
+  background: white;
+  color: black;
+}
+
+/* mobile feedback */
+.btn:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+
+/* animation */
+.fade {
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1; transform: translateY(0);}
+}
+</style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="box fade">
   <h1 id="title"></h1>
 
   <img id="image" src="">
 
   <p id="desc"></p>
 
-  <a href="index.html">ทำแบบทดสอบอีกครั้ง</a>
+  <div class="buttons">
+    <a href="index.html" class="btn">🔄 ทำแบบทดสอบอีกครั้ง</a>
+    <button class="btn" onclick="shareResult()">📲 แชร์ผลลัพธ์</button>
+  </div>
 </div>
 
 <script>
@@ -109,7 +144,7 @@ else if (type === "omega") {
   title = "OMEGA SOUL 🌙";
   image = "omega.jpg";
   desc = `ผู้หญิงแบบ Omega เป็นคนที่รักความเป็นตัวของเธอ 
-  เธอไม่ชอบการบังคับหรือความสัมพันธ์ที่เหนื่อยจนทำให้เธอหมดพลังงาน
+เธอไม่ชอบการบังคับหรือความสัมพันธ์ที่เหนื่อยจนทำให้เธอหมดพลังงาน
 เธอมีโลกส่วนตัวสูง ชอบใช้เวลาอยู่กับความคิดและสิ่งที่ตัวเองสนใจ
 มักมีมุมมองลึกซึ้งและแตกต่างจากคนทั่วไปในความรัก 
 เธอต้องการคนที่เข้าใจตัวตนของเธอและเป็นผู้นำเธอในความสัมพันธ์`;
@@ -118,6 +153,21 @@ else if (type === "omega") {
 document.getElementById("title").innerText = title;
 document.getElementById("desc").innerText = desc;
 document.getElementById("image").src = image;
+
+/* แชร์ */
+function shareResult(){
+  const text = "ฉันได้ผลลัพธ์: " + title;
+
+  if(navigator.share){
+    navigator.share({
+      title: "Personality Test",
+      text: text,
+      url: window.location.href
+    });
+  } else {
+    alert("แชร์ได้เลย:\n" + text);
+  }
+}
 </script>
 
 </body>

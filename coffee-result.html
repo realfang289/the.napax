@@ -2,6 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+
+<!-- 🔥 สำคัญ -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Coffee Result</title>
 
 <style>
@@ -10,70 +14,96 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #0f0f0f;
   color: white;
-  padding: 40px;
 }
 
-/* กล่องหลัก */
+/* container */
 .box {
-  max-width: 700px;
+  max-width: 500px;
   margin: auto;
-  background: #1a1a1a;
-  padding: 30px;
-  border-radius: 20px;
+  padding: 20px;
   text-align: center;
-  box-shadow: 0 0 40px rgba(255,255,255,0.05);
 }
 
-/* รูป */
+/* title */
+h1 {
+  font-size: 22px;
+  margin-bottom: 15px;
+}
+
+/* image */
 img {
   width: 100%;
   height: auto;
-  object-fit: contain;
-  border-radius: 15px;
+  border-radius: 16px;
   margin-bottom: 20px;
+  background: #000;
 }
 
-/* ข้อความ */
-h1 {
-  margin-bottom: 10px;
-}
-
+/* text */
 p {
-  opacity: 0.85;
+  opacity: 0.9;
   white-space: pre-line;
   text-align: left;
+  line-height: 1.7;
+  font-size: 14px;
 }
 
-/* ปุ่ม */
+/* buttons */
+.buttons {
+  margin-top: 25px;
+}
+
 .btn {
-  display: inline-block;
-  margin-top: 20px;
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 14px;
   border: 1px solid #444;
-  padding: 10px 20px;
-  border-radius: 10px;
-  text-decoration: none;
+  background: #1a1a1a;
   color: white;
-  margin-right: 10px;
+  font-size: 15px;
+  text-decoration: none;
+  transition: 0.2s;
 }
 
+/* hover desktop */
 .btn:hover {
   background: white;
   color: black;
+}
+
+/* mobile feedback */
+.btn:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+
+/* animation */
+.fade {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1; transform: translateY(0);}
 }
 </style>
 </head>
 
 <body>
 
-<div class="box">
+<div class="box fade">
   <h1 id="title"></h1>
 
   <img id="image" src="">
 
   <p id="desc"></p>
 
-  <a href="quiz2.html" class="btn">🔄 ทำใหม่</a>
-  <button class="btn" onclick="shareResult()">📱 แชร์ผลลัพธ์</button>
+  <div class="buttons">
+    <a href="quiz2.html" class="btn">🔄 ทำแบบทดสอบอีกครั้ง</a>
+    <button class="btn" onclick="shareResult()">📲 แชร์ผลลัพธ์</button>
+  </div>
 </div>
 
 <script>
@@ -84,9 +114,8 @@ let title = "ไม่พบผลลัพธ์";
 let desc = "กรุณาทำแบบทดสอบใหม่";
 let image = "";
 
-// ☕ mapping ผลลัพธ์
 if(type === "espresso"){
-  title = "☕ESPRESSO";
+  title = "☕ ESPRESSO";
   image = "espresso.jpg";
   desc = `คุณเป็นประเภทเอสเพรสโซ่ มักเป็นคนตรงไปตรงมา ไม่ชอบอ้อมค้อม พูดอะไรก็พูดชัดเจน มีเป้าหมายชัดเจนและมุ่งมั่นสูง
 มีความเป็นตัวของตัวเอง เด็ดเดี่ยว จิตใจแน่วแน่ ชอบความเข้มข้นแท้ ๆ ไม่ต้องประดับด้วยความหวานหรือฟองนม
@@ -95,7 +124,7 @@ if(type === "espresso"){
 โดยรวมคือเธอเป็นคนที่มั่นใจ เข้มข้น มีสไตล์ เป็นตัวเองสูง ชีวิตเต็มไปด้วยพลังงาน`;
 }
 else if(type === "americano"){
-  title = "☕AMERICANO";
+  title = "☕ AMERICANO";
   image = "americano.jpg";
   desc = `คุณเป็นประเภทอเมริกาโน คนเรียบง่าย ไม่ชอบอะไรซับซ้อน แต่มีรสนิยมชัดเจน
 มีความเป็นตัวของตัวเองสูง ไม่ตามกระแสง่ายๆ
@@ -104,51 +133,42 @@ else if(type === "americano"){
 เป็นคนรักอิสระ ไม่ชอบความหวานเลี่ยนทั้งในเครื่องดื่มและความสัมพันธ์`;
 }
 else if(type === "latte"){
-  title = "☕LATTE";
+  title = "☕ LATTE";
   image = "latte.jpg";
   desc = `คุณเป็นประเภทลาเต้คุณคือสายอบอุ่น อ่อนโยน
 เข้ากับคนง่าย และสร้างบรรยากาศดีๆ
 เป็นคนที่ใครอยู่ใกล้ก็สบายใจ มักเป็นคนนุ่มนวล อ่อนโยน ชอบความหวานละมุนและความอบอุ่นในชีวิต
-นิสัยเด่นคือเป็นมิตรสูง ใส่ใจคนอื่น ใจดี และมักเป็นคนที่เพื่อน ๆ มาปรึกษาเรื่องความรู้สึก
-เธอโรแมนติก ละเอียดอ่อนในรายละเอียด และมักมีมุมมองชีวิตที่อบอุ่น
-ปรับตัวเก่ง ชอบความสมดุลระหว่างความเข้มของกาแฟกับความนุ่มของนม ไม่สุดโต่งเกินไป`;
+นิสัยเด่นคือเฟรนลี่ ใส่ใจคนอื่น ใจดี และมักเป็นคนที่เพื่อน ๆ มาปรึกษาเรื่องความรู้สึก
+เธอโรแมนติก ละเอียดอ่อนในรายละเอียด และมักมีมุมมองชีวิตที่อบอุ่น`;
 }
 else if(type === "energy"){
-  title = "⚡กาแฟผสมกระทิงแดง";
+  title = "⚡ กาแฟผสมกระทิงแดง";
   image = "energycoffee.jpg";
   desc = `คุณเป็นประเภทกาแฟผสมกระทิงแดงมักเป็นคนสุดโต่ง พลังงานล้นเหลือ 
-  ชอบความเข้มข้นแบบจัดเต็มทั้งกาแฟและความมันส์ของเครื่องชูกำลัง
+ชอบความเข้มข้นแบบจัดเต็มทั้งกาแฟและความมันส์ของเครื่องชูกำลัง
 นิสัยเด่นคือบ้าพลัง ไม่กลัวเหนื่อย ทำงานหนัก เล่นหนัก ชีวิตต้องมันส์ตลอดเวลา
-เป็นคนตรงไปตรงมาแบบไม่แคร์ พูดแรง ดุเดือด อารมณ์ร้อนเร็ว แต่ใจจริงมักซื่อสัตย์และจริงใจ
-ชอบความท้าทาย ชอบรีบเร่ง ใช้ชีวิตแบบ full speed ไม่ชอบนั่งนิ่งหรือชิล ๆ นาน ๆ
-โดยรวมคือคนเถื่อน ๆ มีไฟสูง ดุดัน แต่ขยันและไม่ยอมแพ้ง่าย`;
+โดยรวมคือคนที่มีไฟสูง ดุดัน แต่ขยันและไม่ยอมแพ้ง่าย`;
 }
 else if(type === "mocha"){
-  title = "🍫MOCHA";
+  title = "🍫 MOCHA";
   image = "mocha.jpg";
-  desc = `คุณเป็นประเภทมอคค่าคุณคือสายโรแมนติก มีเสน่ห์
-ชอบความหวานผสมความลึกซึ้งเป็นคนที่มีมิติและน่าค้นหา เป็นคนที่ชอบสร้างบรรยากาศดีๆ 
-ให้คนรอบตัว อยู่ด้วยแล้วรู้สึกสบายใจแต่ไม่จำเจ
-มีความโรแมนติกและอ่อนไหวต่อความรู้สึก แต่ก็ไม่อ่อนแอจนเสียความเป็นตัวเอง
-รักความสนุก ชอบสีสันในชีวิต แต่ลึกๆ แล้วมีความคิดและมุมมองที่จริงจัง
-เป็นคนที่ทำให้คนหลงได้ง่าย เพราะมีทั้งความนุ่มนวลและความเข้มข้นในตัวเดียวกัน`;
+  desc = `คุณเป็นประเภทมอคค่า คุณคือสายโรแมนติก มีเสน่ห์
+ชอบความหวานผสมความลึกซึ้ง เป็นคนที่มีมิติและน่าค้นหา
+รักความสนุก แต่ลึกๆ มีความคิดจริงจัง`;
 }
 else if(type === "caramel"){
-  title = "🍯CARAMEL MACCHIATO";
+  title = "🍯 CARAMEL MACCHIATO";
   image = "caramel.jpg";
-  desc = `คุณเป็นประเภทCARAMEL MACCHIATO คุณคือสายโรแมนติก มีเสน่ห์
-เข้ากับคนง่าย และมีพลังบวกเป็นคนที่ใครๆก็อยากอยู่ใกล้เขาจะเป็นคนที่ภายนอกดูสุขุม 
-นิ่งเบื้องต้นแต่ซ่อนความหวานละมุนไว้ภายใน เป็นคนที่มีการจัดการชีวิตอย่างเป็นระเบียบ
- มีความโรแมนติกแบบผู้ใหญ่ที่เข้าถึงง่ายแต่ก็มีมุมที่จริงจังกับเป้าหมายเสมอ 
-โดยรวมคือคนที่มีเสน่ห์ดึงดูด น่าค้นหา และคุณมักจะเป็นที่ปรึกษาที่ให้คำแนะนำได้ดีและเป็นผู้ใหญ่`;
+  desc = `คุณเป็นประเภท CARAMEL MACCHIATO เข้ากับคนง่าย มีพลังบวก
+ภายนอกดูสุขุม แต่ซ่อนความหวานละมุนไว้ภายใน
+มีความเป็นผู้ใหญ่และน่าค้นหา`;
 }
 
-// แสดงผล
 document.getElementById("title").innerText = title;
 document.getElementById("desc").innerText = desc;
 document.getElementById("image").src = image;
 
-// แชร์
+/* แชร์ */
 function shareResult(){
   const text = "ฉันได้ผลลัพธ์: " + title;
 
@@ -159,7 +179,7 @@ function shareResult(){
       url: window.location.href
     });
   } else {
-    alert("ก็อปข้อความนี้ไปแชร์ได้เลย:\n" + text);
+    alert("แชร์ได้เลย:\n" + text);
   }
 }
 </script>

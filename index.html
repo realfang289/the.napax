@@ -2,6 +2,10 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
+
+<!-- 🔥 สำคัญมาก (มือถือ) -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Personality Hub</title>
 
 <style>
@@ -15,61 +19,80 @@ body {
 /* HEADER */
 .header {
   text-align: center;
-  padding: 60px 20px 20px;
+  padding: 40px 20px 10px;
 }
 
 .header h1 {
-  font-size: 32px;
-  margin-bottom: 10px;
+  font-size: 24px;
+  margin-bottom: 8px;
 }
 
 .header p {
-  opacity: 0.7;
+  opacity: 0.6;
+  font-size: 14px;
 }
 
-/* GRID */
+/* GRID (มือถือเน้น 1 คอลัมน์) */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 40px;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  padding: 16px;
 }
 
 /* CARD */
 .card {
   background: #1a1a1a;
-  border-radius: 20px;
+  border-radius: 18px;
   overflow: hidden;
   text-decoration: none;
   color: white;
-  transition: 0.3s;
+  transition: 0.25s;
   box-shadow: 0 0 20px rgba(255,255,255,0.05);
+  -webkit-tap-highlight-color: transparent;
 }
 
-.card:hover {
-  transform: scale(1.03);
+/* เวลากดมือถือ */
+.card:active {
+  transform: scale(0.97);
+  opacity: 0.8;
 }
 
 /* IMAGE */
 .card img {
   width: 100%;
-  height: 200px;
+  height: 180px;
   object-fit: cover;
 }
 
 /* TEXT */
 .card-content {
-  padding: 20px;
+  padding: 16px;
 }
 
 .card h2 {
-  margin: 0 0 10px;
+  margin: 0 0 6px;
+  font-size: 16px;
 }
 
 .card p {
-  opacity: 0.7;
-  font-size: 14px;
+  opacity: 0.6;
+  font-size: 13px;
+  line-height: 1.4;
 }
+
+/* 📱 Tablet / Desktop */
+@media (min-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+    padding: 30px;
+  }
+
+  .header h1 {
+    font-size: 30px;
+  }
+}
+
 </style>
 </head>
 
@@ -96,7 +119,7 @@ body {
     <img src="2.jpg">
     <div class="card-content">
       <h2>☕กาแฟแบบไหนที่บ่งบอกความเป็นตัวตนคุณ☕</h2>
-      <p>"คิดสิคิดสิ คาปูชิโน่ เอสเปรสโซ่ อาราบิก้า โรบัสต้า อะไรดีนะ มอคค่า ซุปเปอร์ริช อย่าคิดนาน..."</p>
+      <p>"คิดสิคิดสิ คาปูชิโน่ เอสเปรสโซ่..."</p>
     </div>
   </a>
 
@@ -104,12 +127,10 @@ body {
   <a href="#" class="card">
     <img src="3.jpg">
     <div class="card-content">
-      <h2>🔥Coming soon.</h2>
+      <h2>🔥 Coming soon</h2>
       <p>ติดตามเร็วๆนี้</p>
     </div>
   </a>
-
-
 
 </div>
 
