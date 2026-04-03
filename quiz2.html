@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>Coffee Personality Test</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f0f;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 90%;
+  max-width: 520px;
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+}
+
+.progress {
+  height: 6px;
+  background: #333;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: white;
+}
+
+.question {
+  margin-bottom: 20px;
+}
+
+.answer {
+  margin: 8px 0;
+  padding: 12px;
+  border: 1px solid #444;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.answer:hover {
+  background: white;
+  color: black;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>☕กาแฟแบบไหนที่บ่งบอกความเป็นตัวตนคุณ</h1>
+
+  <div class="progress">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+
+  <div id="quiz"></div>
+</div>
+
+<script>
+let score = {
+  espresso: 0,
+  americano: 0,
+  latte: 0,
+  energy: 0,
+  mocha: 0,
+  caramel: 0
+};
+
+let current = 0;
+
+const questions = [
+{
+  question: "เช้าของคุณเป็นแบบไหน?",
+  answers: [
+    {text:"ลุยทันที", type:"espresso"},
+    {text:"ชิลๆ", type:"latte"},
+    {text:"เรียบง่าย", type:"americano"},
+    {text:"ต้องมีพลัง!", type:"energy"},
+    {text:"หวานนิดๆ", type:"mocha"}
+  ]
+},
+{
+  question: "สไตล์คุณ?",
+  answers: [
+    {text:"มั่นใจ", type:"espresso"},
+    {text:"นุ่มนวล", type:"latte"},
+    {text:"มินิมอล", type:"americano"},
+    {text:"จัดเต็ม", type:"energy"},
+    {text:"โรแมนติก", type:"mocha"}
+  ]
+},
+{
+  question: "วันว่างคุณทำอะไร?",
+  answers: [
+    {text:"ทำงานต่อหรือวางแผนอนาคต", type:"espresso"},
+    {text:"พักผ่อนปล่อยจอย", type:"latte"},
+    {text:"นั้งเม้ามอยกับเพื่อนๆที่รู้ใจ", type:"americano"},
+    {text:"ออกไปลุยกิจกรรมกลางแจ้ง", type:"energy"},
+    {text:"ดูหนังหรืออ่านหนังสือ", type:"mocha"}
+  ]
+},
+{
+  question: "เพื่อนมองคุณว่า?",
+  answers: [
+    {text:"ผู้นำ", type:"espresso"},
+    {text:"อบอุ่นตลก", type:"latte"},
+    {text:"นิ่งๆไม่สนใจใคร", type:"americano"},
+    {text:"แม่งบ้า", type:"energy"},
+    {text:"เป็นผู้ใหญ่", type:"caramel"}
+  ]
+},
+{
+  question: "คุณจัดการความเครียดยังไง?",
+  answers: [
+    {text:"ลุยแก้", type:"espresso"},
+    {text:"พักก่อน", type:"latte"},
+    {text:"คิดเงียบๆ", type:"americano"},
+    {text:"ระบายพลัง", type:"energy"},
+    {text:"กินของหวาน", type:"mocha"}
+  ]
+},
+{
+  question: "ความรักของคุณ?",
+  answers: [
+    {text:"ชัดเจน", type:"espresso"},
+    {text:"อบอุ่น", type:"latte"},
+    {text:"ความสบายใจ", type:"americano"},
+    {text:"ร้อนแรง", type:"energy"},
+    {text:"ลึกซึ้ง", type:"caramel"}
+  ]
+},
+
+{
+  question: "คุณทำงานแบบไหน?",
+  answers: [
+    {text:"เด็ดเดี่ยวต้องวางแผน", type:"espresso"},
+    {text:"ค่อยๆทำเดี๋ยวก็เสร็จ", type:"latte"},
+    {text:"เน้นทำคนเดียว", type:"americano"},
+    {text:"ทำไปเรื่อย", type:"energy"},
+    {text:"สร้างสรรค์อย่างเป็นระเบียบ", type:"mocha"}
+  ]
+},
+{
+  question: "คุณชอบบรรยากาศแบบไหน?",
+  answers: [
+    {text:"แข่งขัน", type:"espresso"},
+    {text:"อบอุ่น", type:"latte"},
+    {text:"สงบ", type:"americano"},
+    {text:"มันส์ๆ", type:"energy"},
+    {text:"โรแมนติก", type:"mocha"}
+  ]
+},
+{
+  question: "คุณนิยามตัวเองว่า?",
+  answers: [
+    {text:"เด็ดขาด", type:"espresso"},
+    {text:"อ่อนโยน", type:"latte"},
+    {text:"เรียบง่าย", type:"americano"},
+    {text:"บ้า", type:"energy"},
+    {text:"มีเสน่ห์", type:"caramel"}
+  ]
+}
+];
+
+function loadQ(){
+  const quiz = document.getElementById("quiz");
+  const q = questions[current];
+
+  quiz.innerHTML = `<div class="question">${q.question}</div>`;
+
+  q.answers.forEach(a=>{
+    const btn = document.createElement("div");
+    btn.className = "answer";
+    btn.innerText = a.text;
+
+    btn.onclick = ()=>{
+      score[a.type]++;
+      current++;
+
+      document.getElementById("progress").style.width =
+        (current/questions.length)*100 + "%";
+
+      if(current < questions.length){
+        loadQ();
+      } else {
+        showResult();
+      }
+    };
+
+    quiz.appendChild(btn);
+  });
+}
+
+function showResult(){
+  let max=0;
+  let result="";
+
+  for(let key in score){
+    if(score[key]>max){
+      max=score[key];
+      result=key;
+    }
+  }
+
+  window.location.href = "coffee-result.html?type="+result;
+}
+
+loadQ();
+</script>
+
+</body>
+</html>

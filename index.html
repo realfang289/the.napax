@@ -2,7 +2,7 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>Personality Test</title>
+<title>Personality Hub</title>
 
 <style>
 body {
@@ -10,211 +10,108 @@ body {
   font-family: 'Segoe UI', sans-serif;
   background: #0f0f0f;
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
 }
 
-.container {
-  width: 90%;
-  max-width: 520px;
-  background: #1a1a1a;
-  padding: 30px;
-  border-radius: 20px;
+/* HEADER */
+.header {
   text-align: center;
-  box-shadow: 0 0 40px rgba(255,255,255,0.05);
+  padding: 60px 20px 20px;
 }
 
-h1 {
+.header h1 {
+  font-size: 32px;
   margin-bottom: 10px;
 }
 
-.progress {
-  height: 6px;
-  background: #333;
-  border-radius: 10px;
-  margin-bottom: 20px;
+.header p {
+  opacity: 0.7;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 40px;
+}
+
+/* CARD */
+.card {
+  background: #1a1a1a;
+  border-radius: 20px;
   overflow: hidden;
-}
-
-.progress-bar {
-  height: 100%;
-  width: 0%;
-  background: white;
-  transition: 0.3s;
-}
-
-.question {
-  font-size: 18px;
-  margin-bottom: 20px;
-}
-
-.answer {
-  width: 100%;
-  margin: 8px 0;
-  padding: 12px;
-  border-radius: 12px;
-  border: 1px solid #444;
-  background: transparent;
+  text-decoration: none;
   color: white;
-  cursor: pointer;
   transition: 0.3s;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  box-shadow: 0 0 20px rgba(255,255,255,0.05);
 }
 
-.answer:hover {
-  background: white;
-  color: black;
-  transform: scale(1.02);
+.card:hover {
+  transform: scale(1.03);
+}
+
+/* IMAGE */
+.card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+}
+
+/* TEXT */
+.card-content {
+  padding: 20px;
+}
+
+.card h2 {
+  margin: 0 0 10px;
+}
+
+.card p {
+  opacity: 0.7;
+  font-size: 14px;
 }
 </style>
 </head>
 
 <body>
 
-<div class="container">
-  <h1>🖤 คุณเป็นผู้หญิงแบบไหน?</h1>
-
-  <div class="progress">
-    <div class="progress-bar" id="progress"></div>
-  </div>
-
-  <div id="quiz"></div>
+<div class="header">
+  <h1>🖤ค้นหาตัวตนของคุณ🖤</h1>
+  <p>เลือกแบบทดสอบที่คุณสนใจ</p>
 </div>
 
-<script>
-let score = {
-  alpha: 0,
-  beta: 0,
-  omega: 0,
-  sigma: 0
-};
+<div class="grid">
 
-let currentQuestion = 0;
+  <!-- QUIZ 1 -->
+  <a href="quiz1.html" class="card">
+    <img src="1.jpg">
+    <div class="card-content">
+      <h2>👑คุณเป็นผู้หญิงแบบไหน?👑</h2>
+      <p>Alpha / Beta / Omega / Sigma</p>
+    </div>
+  </a>
 
-const questions = [
-  {
-    question: "เวลามีปัญหา คุณจะทำยังไง?",
-    answers: [
-      { text: "จัดการเองทันที", type: "alpha" },
-      { text: "ปรึกษาคนอื่น", type: "beta" },
-      { text: "ปล่อยไปก่อน", type: "omega" },
-      { text: "คิดเงียบๆ คนเดียว", type: "sigma" }
-    ]
-  },
-  {
-    question: "สไตล์การใช้ชีวิตของคุณ?",
-    answers: [
-      { text: "เป็นผู้นำ", type: "alpha" },
-      { text: "อยู่กับเพื่อน", type: "beta" },
-      { text: "สบายๆ ไม่ซีเรียส", type: "omega" },
-      { text: "รักอิสระ ไม่ยึดติด", type: "sigma" }
-    ]
-  },
-  {
-    
-    question: "เวลาคุณอยู่ในกลุ่มเพื่อน คุณมักเป็นคนแบบไหน?",
-    answers: [
-      { text: "คนตัดสินใจ / นำทีม", type: "alpha" },
-      { text: "คนคอยซัพพอร์ตเพื่อน", type: "beta" },
-      { text: "คนเงียบๆ ฟังมากกว่าพูด", type: "omega" },
-      { text: "คนแยกตัว แต่ยังคุมเกมได้", type: "sigma" }
-    ]
-  },
-  {
-    question: "คุณรับมือกับความกดดันยังไง?",
-    answers: [
-      { text: "ลุยตรงๆ ไม่ถอย", type: "alpha" },
-      { text: "ขอคำแนะนำจากคนที่ไว้ใจ", type: "beta" },
-      { text: "พักก่อน ค่อยคิดทีหลัง", type: "omega" },
-      { text: "วิเคราะห์เงียบๆ แล้วหาทางเอง", type: "sigma" }
-    ]
-  },
-  {
-    question: "สไตล์ความรักของคุณ?",
-    answers: [
-      { text: "เป็นผู้นำในความสัมพันธ์", type: "alpha" },
-      { text: "ดูแล เอาใจใส่คู่รัก", type: "beta" },
-      { text: "ปล่อยสบาย ไม่ยึดติด", type: "omega" },
-      { text: "รักอิสระ แต่ลึกซึ้ง", type: "sigma" }
-    ]
-  },
-  {
-    question: "คุณมองความสำเร็จว่าอะไรสำคัญที่สุด?",
-    answers: [
-      { text: "อำนาจ และการควบคุม", type: "alpha" },
-      { text: "ความสัมพันธ์ที่ดี", type: "beta" },
-      { text: "ความสุขส่วนตัว", type: "omega" },
-      { text: "อิสระในการใช้ชีวิต", type: "sigma" }
-    ]
-  },
-  {
-    question: "ถ้ามีคนไม่ชอบคุณ คุณจะทำยังไง?",
-    answers: [
-      { text: "ไม่สน และเดินหน้าต่อ", type: "alpha" },
-      { text: "พยายามปรับตัวเข้าหา", type: "beta" },
-      { text: "รู้สึกนิดหน่อย แต่ปล่อยผ่าน", type: "omega" },
-      { text: "เฉยๆ ไม่แคร์ความคิดเห็นใคร", type: "sigma" }
-    ]
-  }
-];
+  <!-- QUIZ 2 -->
+  <a href="quiz2.html" class="card">
+    <img src="2.jpg">
+    <div class="card-content">
+      <h2>☕กาแฟแบบไหนที่บ่งบอกความเป็นตัวตนคุณ☕</h2>
+      <p>"คิดสิคิดสิ คาปูชิโน่ เอสเปรสโซ่ อาราบิก้า โรบัสต้า อะไรดีนะ มอคค่า ซุปเปอร์ริช อย่าคิดนาน..."</p>
+    </div>
+  </a>
 
-function loadQuestion() {
-  const quiz = document.getElementById("quiz");
-  const q = questions[currentQuestion];
+  <!-- QUIZ 3 -->
+  <a href="#" class="card">
+    <img src="3.jpg">
+    <div class="card-content">
+      <h2>🔥Coming soon.</h2>
+      <p>ติดตามเร็วๆนี้</p>
+    </div>
+  </a>
 
-  quiz.innerHTML = `
-    <div class="question">${q.question}</div>
-  `;
 
-  q.answers.forEach(a => {
-    const btn = document.createElement("div");
-    btn.className = "answer";
-    btn.innerHTML = `<span>${a.text}</span><span>→</span>`;
 
-    btn.onclick = () => {
-      score[a.type]++;
-      currentQuestion++;
-
-      updateProgress();
-
-      if (currentQuestion < questions.length) {
-        loadQuestion();
-      } else {
-        showResult();
-      }
-    };
-
-    quiz.appendChild(btn);
-  });
-}
-
-function updateProgress() {
-  const percent = (currentQuestion / questions.length) * 100;
-  document.getElementById("progress").style.width = percent + "%";
-}
-
-function showResult() {
-  let max = -1;
-  let resultType = "";
-
-  for (let key in score) {
-    if (score[key] > max) {
-      max = score[key];
-      resultType = key;
-    }
-  }
-
-  window.location.href = "result.html?type=" + resultType;
-}
-
-// เริ่ม
-loadQuestion();
-</script>
+</div>
 
 </body>
-</html>
 </html>
