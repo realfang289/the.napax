@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>ผลลัพธ์ของคุณ</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f0f;
+  color: white;
+}
+
+.box {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+}
+
+h1 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+img {
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  background: #000;
+}
+
+p {
+  text-align: left;
+  line-height: 1.7;
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.badge {
+  display: inline-block;
+  margin-bottom: 10px;
+  padding: 6px 12px;
+  border-radius: 20px;
+  background: #222;
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+.buttons {
+  margin-top: 25px;
+}
+
+.btn {
+  display: block;
+  width: 100%;
+  margin: 10px 0;
+  padding: 15px;
+  border-radius: 14px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  transition: 0.2s;
+}
+
+.btn:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+
+.fade {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {opacity:0; transform: translateY(10px);}
+  to {opacity:1; transform: translateY(0);}
+}
+</style>
+</head>
+
+<body>
+
+<div class="box fade">
+  <div class="badge">RESULT</div>
+
+  <h1 id="title"></h1>
+  <img id="image" src="">
+  <p id="desc"></p>
+
+  <div class="buttons">
+    <a href="quiz3.html" class="btn">🔄 ทำแบบทดสอบอีกครั้ง</a>
+    <button class="btn" onclick="shareResult()">📲 แชร์ผลลัพธ์</button>
+    <button class="btn" onclick="shareLink()">🔗 แชร์แบบทดสอบ</button>
+  </div>
+</div>
+
+<script>
+const params = new URLSearchParams(window.location.search);
+const type = params.get("type");
+
+let title = "ไม่พบผลลัพธ์";
+let desc = "กรุณาทำแบบทดสอบใหม่";
+let image = "";
+
+if(type === "golden"){
+  title = "🐶 GOLDEN TYPE";
+  image = "golden.jpg";
+  desc = `คุณคือผู้ชายสายอบอุ่น ใจดี และจริงใจแบบสุดๆ คุณให้ความสำคัญกับคนที่รัก 
+  และพร้อมจะดูแลแบบไม่หวังผลตอบแทน เสน่ห์ของคุณคือความสม่ำเสมอ ความใส่ใจ 
+  และความน่าเชื่อถือ อยู่ด้วยแล้วสบายใจ เป็น safe zone ของคนรอบตัว 
+  แต่บางครั้งคุณอาจยอมคนมากเกินไป จนลืมตัวเอง ถ้ารู้จักตั้งขอบเขต คุณจะเป็นคนที่เพอร์เฟกต์มาก`;
+}
+else if(type === "cat"){
+  title = "🐱 CAT TYPE";
+  image = "cat.jpg";
+  desc = `คุณคือผู้ชายสายอิสระ ลึกลับ และมีเสน่ห์เฉพาะตัว ไม่ชอบถูกควบคุม 
+  และเลือกใช้ชีวิตในแบบของตัวเอง คุณไม่ใช่คนเข้าหาง่าย แต่ถ้าใครได้เข้าไปอยู่ในโลกของคุณ 
+  เขาจะรู้ว่าคุณมีมุมอ่อนโยนที่ซ่อนอยู่ เสน่ห์ของคุณคือความนิ่ง 
+  ความไม่ตามใคร และความเป็นตัวของตัวเอง`;
+}
+else if(type === "lion"){
+  title = "🦁 LION TYPE";
+  image = "lion.jpg";
+  desc = `คุณกล้าตัดสินใจ กล้าลุย และไม่กลัวความท้าทาย 
+  คุณชอบควบคุมสถานการณ์ และเป็นคนที่คนอื่นมองว่า "เอาอยู่" ในความรัก 
+  คุณต้องการความชัดเจนและความสัตย์ซื่อ เสน่ห์ของคุณคือความมั่นใจและความเด็ดขาด`;
+}
+else if(type === "snake"){
+  title = "🐍 SNAKE TYPE";
+  image = "snake.jpg";
+  desc = `คุณคือผู้ชายสายฉลาด มีชั้นเชิง และอ่านเกมขาด คุณไม่รีบ 
+  แต่ทุกการเคลื่อนไหวมีความหมาย คุณมีเสน่ห์แบบลึกลับ น่าค้นหา 
+  และคาดเดายาก รู้ทันคน และมักเป็นคนที่ควบคุมเกมโดยที่คนอื่นไม่รู้ตัว 
+  เสน่ห์ของคุณคือความเฉียบคมและไหวพริบ`;
+}
+else if(type === "wolf"){
+  title = "🐺 WOLF TYPE";
+  image = "wolf.jpg";
+  desc = `คุณคือผู้ชายสายเงียบ สุขุม และจริงจัง ไม่พูดมาก แต่ทุกคำมีน้ำหนัก 
+  คุณพึ่งพาตัวเองได้สูง และไม่จำเป็นต้องอยู่ในฝูง ในความรัก คุณจริงใจ ลึกซึ้ง 
+  และปกป้องคนของตัวเอง เสน่ห์ของคุณคือความนิ่ง ความลึก และความมั่นคง`;
+}
+else if(type === "octopus"){
+  title = "🐙 OCTOPUS TYPE";
+  image = "octopus.jpg";
+  desc = `คุณคือผู้ชายสายฉลาดหลายมิติ ปรับตัวเก่ง และคิดไว 
+  คุณสามารถจัดการหลายอย่างพร้อมกันได้แบบไม่น่าเชื่อ คุณมีมุมที่ทั้งสนุก 
+  ซับซ้อน และคาดเดายาก เสน่ห์ของคุณคือความยืดหยุ่นและความไม่เหมือนใคร`;
+}
+
+document.getElementById("title").innerText = title;
+document.getElementById("desc").innerText = desc;
+document.getElementById("image").src = image;
+
+/* แชร์ผล */
+function shareResult(){
+  const text = "ฉันได้ผลลัพธ์: " + title;
+
+  if(navigator.share){
+    navigator.share({
+      title: "Personality Test",
+      text: text,
+      url: window.location.href
+    });
+  } else {
+    alert(text);
+  }
+}
+
+/* แชร์ลิงก์แบบทดสอบ */
+function shareLink(){
+  const url = window.location.origin + "/quiz3.html";
+  const text = "มาลองทำแบบทดสอบดูว่าคุณเป็นผู้ชายไทป์ไหน 🔥";
+
+  if(navigator.share){
+    navigator.share({
+      title: "Personality Test",
+      text: text,
+      url: url
+    });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert("📋 คัดลอกลิงก์แล้ว!");
+  }
+}
+</script>
+
+</body>
+</html>

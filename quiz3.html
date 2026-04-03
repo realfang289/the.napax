@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+
+<!-- 🔥 สำคัญ -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>คุณเป็นผู้ชายไทป์ไหน?</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f0f;
+  color: white;
+}
+
+/* container */
+.container {
+  max-width: 500px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* title */
+h1 {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* progress */
+.progress {
+  height: 8px;
+  background: #333;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: white;
+  transition: 0.3s;
+}
+
+/* step */
+.step {
+  text-align: right;
+  font-size: 13px;
+  opacity: 0.6;
+  margin-bottom: 20px;
+}
+
+/* question */
+.question {
+  font-size: 18px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* answer */
+.answer {
+  margin: 10px 0;
+  padding: 16px;
+  border-radius: 14px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 15px;
+}
+
+/* hover desktop */
+.answer:hover {
+  background: white;
+  color: black;
+}
+
+/* mobile tap */
+.answer:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🐺 คุณเป็นผู้ชายไทป์ไหน?</h1>
+
+  <div class="progress">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+
+  <div class="step" id="step"></div>
+
+  <div id="quiz"></div>
+</div>
+
+<script>
+let score = {
+  golden: 0,
+  cat: 0,
+  lion: 0,
+  snake: 0,
+  wolf: 0,
+  octopus: 0
+};
+
+let current = 0;
+
+const questions = [
+{
+  question: "เวลาคุณจีบใคร คุณเป็นแบบไหน?",
+  answers: [
+    {text:"ใส่ใจสุดๆ", type:"golden"},
+    {text:"ชิลล์ๆ เดี๋ยวเขาก็มาเอง", type:"cat"},
+    {text:"จีบเลย", type:"lion"},
+    {text:"มีชั้นเชิง", type:"snake"},
+    {text:"นิ่งๆ แต่จริงจัง", type:"wolf"}
+  ]
+},
+{
+  question: "เวลามีปัญหา?",
+  answers: [
+    {text:"ช่วยทุกคน", type:"golden"},
+    {text:"อยู่เงียบๆ", type:"cat"},
+    {text:"ลุยแก้", type:"lion"},
+    {text:"วางแผนก่อน", type:"snake"},
+    {text:"จัดการเอง", type:"wolf"}
+  ]
+},
+{
+  question: "สไตล์ความรักของคุณ?",
+  answers: [
+    {text:"อบอุ่น", type:"golden"},
+    {text:"รักอิสระ", type:"cat"},
+    {text:"ครอบครอง", type:"lion"},
+    {text:"ลึกลับ", type:"snake"},
+    {text:"จริงจัง", type:"wolf"}
+  ]
+},
+{
+  question: "เพื่อนมองคุณว่า?",
+  answers: [
+    {text:"ผู้ชายแสนดี", type:"golden"},
+    {text:"เข้าถึงยาก", type:"cat"},
+    {text:"ผู้นำ", type:"lion"},
+    {text:"เจ้าเล่ห์", type:"snake"},
+    {text:"เงียบขรึม", type:"wolf"}
+  ]
+},
+{
+  question: "เวลาว่างคุณทำอะไร?",
+  answers: [
+    {text:"อยู่กับคนรัก", type:"golden"},
+    {text:"อยู่คนเดียว", type:"cat"},
+    {text:"ออกไปลุย", type:"lion"},
+    {text:"คิดวิเคราะห์", type:"snake"},
+    {text:"พักเงียบๆ", type:"wolf"}
+  ]
+},
+{
+  question: "คุณนิยามตัวเองว่า?",
+  answers: [
+    {text:"อบอุ่น", type:"golden"},
+    {text:"อิสระ", type:"cat"},
+    {text:"ทรงพลัง", type:"lion"},
+    {text:"ฉลาด", type:"snake"},
+    {text:"ลึกซึ้ง", type:"wolf"}
+  ]
+},
+{
+  question: "เสน่ห์ของคุณคือ?",
+  answers: [
+    {text:"ความใส่ใจ", type:"golden"},
+    {text:"ความลึกลับ", type:"cat"},
+    {text:"ความมั่นใจ", type:"lion"},
+    {text:"ไหวพริบ", type:"snake"},
+    {text:"ความนิ่ง", type:"wolf"}
+  ]
+}
+];
+
+function loadQ(){
+  const quiz = document.getElementById("quiz");
+  const q = questions[current];
+
+  document.getElementById("step").innerText =
+    `ข้อ ${current+1} / ${questions.length}`;
+
+  quiz.innerHTML = `<div class="question">${q.question}</div>`;
+
+  q.answers.forEach(a=>{
+    const div = document.createElement("div");
+    div.className = "answer";
+    div.innerText = a.text;
+
+    div.onclick = ()=>{
+      score[a.type]++;
+      current++;
+
+      document.getElementById("progress").style.width =
+        (current/questions.length)*100 + "%";
+
+      if(current < questions.length){
+        loadQ();
+      } else {
+        showResult();
+      }
+    };
+
+    quiz.appendChild(div);
+  });
+}
+
+function showResult(){
+  let max = 0;
+  let result = "";
+
+  for(let key in score){
+    if(score[key] > max){
+      max = score[key];
+      result = key;
+    }
+  }
+
+  window.location.href = "male-result.html?type=" + result;
+}
+
+loadQ();
+</script>
+
+</body>
+</html>

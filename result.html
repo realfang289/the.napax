@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 
-<!-- 🔥 สำคัญมาก -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>ผลลัพธ์ของคุณ</title>
@@ -16,7 +15,6 @@ body {
   color: white;
 }
 
-/* container */
 .box {
   max-width: 500px;
   margin: auto;
@@ -24,13 +22,11 @@ body {
   text-align: center;
 }
 
-/* title */
 h1 {
   font-size: 22px;
   margin-bottom: 15px;
 }
 
-/* image */
 img {
   width: 100%;
   height: auto;
@@ -39,7 +35,6 @@ img {
   background: #000;
 }
 
-/* text */
 p {
   opacity: 0.85;
   white-space: pre-line;
@@ -48,7 +43,6 @@ p {
   font-size: 14px;
 }
 
-/* ปุ่ม */
 .buttons {
   margin-top: 25px;
 }
@@ -67,19 +61,16 @@ p {
   transition: 0.2s;
 }
 
-/* hover desktop */
 .btn:hover {
   background: white;
   color: black;
 }
 
-/* mobile feedback */
 .btn:active {
   transform: scale(0.97);
   opacity: 0.8;
 }
 
-/* animation */
 .fade {
   animation: fadeIn 0.6s ease;
 }
@@ -103,6 +94,7 @@ p {
   <div class="buttons">
     <a href="index.html" class="btn">🔄 ทำแบบทดสอบอีกครั้ง</a>
     <button class="btn" onclick="shareResult()">📲 แชร์ผลลัพธ์</button>
+    <button class="btn" onclick="shareLink()">🔗 แชร์แบบทดสอบ</button>
   </div>
 </div>
 
@@ -154,7 +146,7 @@ document.getElementById("title").innerText = title;
 document.getElementById("desc").innerText = desc;
 document.getElementById("image").src = image;
 
-/* แชร์ */
+/* แชร์ผล */
 function shareResult(){
   const text = "ฉันได้ผลลัพธ์: " + title;
 
@@ -166,6 +158,23 @@ function shareResult(){
     });
   } else {
     alert("แชร์ได้เลย:\n" + text);
+  }
+}
+
+/* แชร์ลิงก์ */
+function shareLink(){
+  const url = window.location.origin + "/quiz1.html";
+  const text = "มาลองทำแบบทดสอบดู 🔥";
+
+  if(navigator.share){
+    navigator.share({
+      title: "Personality Test",
+      text: text,
+      url: url
+    });
+  } else {
+    navigator.clipboard.writeText(url);
+    alert("📋 คัดลอกลิงก์แล้ว!");
   }
 }
 </script>
