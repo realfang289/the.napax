@@ -1,40 +1,88 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>คุณเป็นผู้หญิงแบบไหน?</title>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f5f5f5;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      background: white;
-      padding: 20px;
-      margin: auto;
-      border-radius: 10px;
-    }
-    button {
-      display: block;
-      margin: 10px 0;
-      padding: 10px;
-      width: 100%;
-      cursor: pointer;
-    }
-  </style>
+<meta charset="UTF-8">
+<title>Personality Test</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f0f;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  width: 90%;
+  max-width: 520px;
+  background: #1a1a1a;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(255,255,255,0.05);
+}
+
+h1 {
+  margin-bottom: 10px;
+}
+
+.progress {
+  height: 6px;
+  background: #333;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: white;
+  transition: 0.3s;
+}
+
+.question {
+  font-size: 18px;
+  margin-bottom: 20px;
+}
+
+.answer {
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #444;
+  background: transparent;
+  color: white;
+  cursor: pointer;
+  transition: 0.3s;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.answer:hover {
+  background: white;
+  color: black;
+  transform: scale(1.02);
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-  <h1>คุณเป็นผู้หญิงแบบไหน?</h1>
+  <h1>🖤 คุณเป็นผู้หญิงแบบไหน?</h1>
+
+  <div class="progress">
+    <div class="progress-bar" id="progress"></div>
+  </div>
 
   <div id="quiz"></div>
-
-  <button onclick="showResult()">ดูผลลัพธ์</button>
-
-  <h2 id="result"></h2>
 </div>
 
 <script>
@@ -44,6 +92,8 @@ let score = {
   omega: 0,
   sigma: 0
 };
+
+let currentQuestion = 0;
 
 const questions = [
   {
@@ -65,6 +115,7 @@ const questions = [
     ]
   },
   {
+    
     question: "เวลาคุณอยู่ในกลุ่มเพื่อน คุณมักเป็นคนแบบไหน?",
     answers: [
       { text: "คนตัดสินใจ / นำทีม", type: "alpha" },
@@ -111,31 +162,41 @@ const questions = [
   }
 ];
 
-// โหลดคำถาม
-function loadQuiz() {
-  const quizDiv = document.getElementById("quiz");
+function loadQuestion() {
+  const quiz = document.getElementById("quiz");
+  const q = questions[currentQuestion];
 
-  questions.forEach((q) => {
-    const div = document.createElement("div");
-    div.innerHTML = `<h3>${q.question}</h3>`;
+  quiz.innerHTML = `
+    <div class="question">${q.question}</div>
+  `;
 
-    q.answers.forEach(a => {
-      const btn = document.createElement("button");
-      btn.innerText = a.text;
+  q.answers.forEach(a => {
+    const btn = document.createElement("div");
+    btn.className = "answer";
+    btn.innerHTML = `<span>${a.text}</span><span>→</span>`;
 
-      btn.onclick = () => {
-        score[a.type]++;
-        btn.style.background = "lightgreen";
-      };
+    btn.onclick = () => {
+      score[a.type]++;
+      currentQuestion++;
 
-      div.appendChild(btn);
-    });
+      updateProgress();
 
-    quizDiv.appendChild(div);
+      if (currentQuestion < questions.length) {
+        loadQuestion();
+      } else {
+        showResult();
+      }
+    };
+
+    quiz.appendChild(btn);
   });
 }
 
-// คำนวณผล
+function updateProgress() {
+  const percent = (currentQuestion / questions.length) * 100;
+  document.getElementById("progress").style.width = percent + "%";
+}
+
 function showResult() {
   let max = -1;
   let resultType = "";
@@ -147,17 +208,13 @@ function showResult() {
     }
   }
 
-  if (max === 0) {
-    alert("กรุณาเลือกคำตอบก่อนดูผลลัพธ์");
-    return;
-  }
-
   window.location.href = "result.html?type=" + resultType;
 }
 
-// เรียกใช้งาน
-loadQuiz();
+// เริ่ม
+loadQuestion();
 </script>
 
 </body>
+</html>
 </html>
