@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>MBTI Test</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #0f0f0f;
+  color: white;
+}
+
+/* container */
+.container {
+  max-width: 520px;
+  margin: auto;
+  padding: 20px;
+}
+
+/* title */
+h1 {
+  text-align: center;
+  font-size: 20px;
+  margin-bottom: 15px;
+}
+
+/* progress */
+.progress {
+  height: 6px;
+  background: #333;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.progress-bar {
+  height: 100%;
+  width: 0%;
+  background: white;
+  transition: 0.3s;
+}
+
+/* step */
+.step {
+  text-align: right;
+  font-size: 12px;
+  opacity: 0.6;
+  margin-bottom: 20px;
+}
+
+/* question */
+.question {
+  font-size: 17px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+/* answer */
+.answer {
+  margin: 10px 0;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  cursor: pointer;
+  transition: 0.2s;
+  font-size: 14px;
+}
+
+.answer:active {
+  transform: scale(0.97);
+  opacity: 0.8;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h1>🧠 MBTI Test</h1>
+
+  <div class="progress">
+    <div class="progress-bar" id="progress"></div>
+  </div>
+
+  <div class="step" id="step"></div>
+
+  <div id="quiz"></div>
+</div>
+
+<script>
+let score = {
+  E:0, I:0,
+  S:0, N:0,
+  T:0, F:0,
+  J:0, P:0
+};
+
+let current = 0;
+
+const questions = [
+
+/* E vs I */
+{
+  question:"เวลาคุณอยู่ในสังคม คุณรู้สึกยังไง?",
+  answers:[
+    {text:"ชอบคุยกับคนใหม่ๆ", type:"E"},
+    {text:"ชอบอยู่กับเพื่อนสนิท", type:"I"},
+    {text:"เป็นผู้นำวงสนทนา", type:"E"},
+    {text:"ฟังมากกว่าพูด", type:"I"}
+  ]
+},
+{
+  question:"วันหยุดในฝันของคุณ?",
+  answers:[
+    {text:"ออกไปเที่ยวกับคนเยอะๆ", type:"E"},
+    {text:"อยู่บ้านเงียบๆ", type:"I"},
+    {text:"ทำกิจกรรมกับเพื่อน", type:"E"},
+    {text:"อ่านหนังสือคนเดียว", type:"I"}
+  ]
+},
+
+/* S vs N */
+{
+  question:"คุณสนใจอะไร?",
+  answers:[
+    {text:"ข้อเท็จจริง", type:"S"},
+    {text:"ไอเดียใหม่ๆ", type:"N"},
+    {text:"สิ่งที่จับต้องได้", type:"S"},
+    {text:"ความเป็นไปได้", type:"N"}
+  ]
+},
+{
+  question:"เวลาทำงาน คุณจะ?",
+  answers:[
+    {text:"ทำตามขั้นตอน", type:"S"},
+    {text:"คิดวิธีใหม่", type:"N"},
+    {text:"ใช้ประสบการณ์", type:"S"},
+    {text:"ใช้จินตนาการ", type:"N"}
+  ]
+},
+
+/* T vs F */
+{
+  question:"เวลาตัดสินใจ คุณจะ?",
+  answers:[
+    {text:"ใช้เหตุผล", type:"T"},
+    {text:"ใช้ความรู้สึก", type:"F"},
+    {text:"มองความถูกต้อง", type:"T"},
+    {text:"มองความรู้สึกคนอื่น", type:"F"}
+  ]
+},
+{
+  question:"คุณเป็นคนแบบไหน?",
+  answers:[
+    {text:"ตรงไปตรงมา", type:"T"},
+    {text:"อ่อนโยน", type:"F"},
+    {text:"ตัดสินใจเด็ดขาด", type:"T"},
+    {text:"เห็นใจคน", type:"F"}
+  ]
+},
+
+/* J vs P */
+{
+  question:"คุณใช้ชีวิตแบบไหน?",
+  answers:[
+    {text:"วางแผน", type:"J"},
+    {text:"ปล่อยตามใจ", type:"P"},
+    {text:"ชอบความแน่นอน", type:"J"},
+    {text:"ยืดหยุ่น", type:"P"}
+  ]
+},
+{
+  question:"คุณทำงานยังไง?",
+  answers:[
+    {text:"ทำตามแผน", type:"J"},
+    {text:"ทำตามอารมณ์", type:"P"},
+    {text:"เสร็จก่อนเวลา", type:"J"},
+    {text:"ใกล้เดดไลน์ค่อยทำ", type:"P"}
+  ]
+}
+,{
+  question:"เมื่อคุณต้องเริ่มโปรเจกต์ใหม่ คุณมักจะเริ่มยังไง?",
+  answers:[
+    {text:"ลงมือทำทันทีแล้วค่อยปรับ", type:"P"},
+    {text:"วางแผนอย่างละเอียดก่อนเริ่ม", type:"J"},
+    {text:"ลองไอเดียใหม่ๆ ที่น่าสนใจ", type:"N"},
+    {text:"ใช้วิธีที่เคยได้ผลมาก่อน", type:"S"}
+  ]
+},
+{
+  question:"เวลาคุณคุยกับคนอื่น คุณให้ความสำคัญกับอะไร?",
+  answers:[
+    {text:"ความรู้สึกของอีกฝ่าย", type:"F"},
+    {text:"ความถูกต้องของข้อมูล", type:"T"},
+    {text:"พลังและบรรยากาศในการคุย", type:"E"},
+    {text:"เนื้อหาที่ลึกซึ้ง", type:"I"}
+  ]
+},
+{
+  question:"คุณมองอนาคตยังไง?",
+  answers:[
+    {text:"วางแผนชัดเจนเป็นขั้นตอน", type:"J"},
+    {text:"ปล่อยให้เป็นไปตามสถานการณ์", type:"P"},
+    {text:"มองเป็นภาพใหญ่และความเป็นไปได้", type:"N"},
+    {text:"มองจากสิ่งที่เกิดขึ้นจริง", type:"S"}
+  ]
+},
+{
+  question:"เวลาทำงานเป็นทีม คุณมักเป็นคนแบบไหน?",
+  answers:[
+    {text:"เป็นผู้นำและตัดสินใจ", type:"E"},
+    {text:"คอยสนับสนุนและช่วยเหลือ", type:"F"},
+    {text:"วิเคราะห์ข้อมูลและวางแผน", type:"T"},
+    {text:"ทำงานเงียบๆ ของตัวเอง", type:"I"}
+  ]
+},
+{
+  question:"คุณชอบงานแบบไหนมากกว่า?",
+  answers:[
+    {text:"มีโครงสร้างชัดเจน", type:"J"},
+    {text:"ยืดหยุ่น เปลี่ยนได้", type:"P"},
+    {text:"ต้องใช้ความคิดสร้างสรรค์", type:"N"},
+    {text:"เน้นความแม่นยำ", type:"S"}
+  ]
+},
+{
+  question:"เมื่อมีคนมาปรึกษาคุณ คุณจะ?",
+  answers:[
+    {text:"ให้คำแนะนำแบบตรงไปตรงมา", type:"T"},
+    {text:"ปลอบใจและเข้าใจความรู้สึก", type:"F"},
+    {text:"แชร์ประสบการณ์ของตัวเอง", type:"S"},
+    {text:"ช่วยมองหาทางเลือกใหม่ๆ", type:"N"}
+  ]
+},
+{
+  question:"คุณตัดสินใจเรื่องสำคัญจากอะไร?",
+  answers:[
+    {text:"เหตุผลและข้อมูล", type:"T"},
+    {text:"ความรู้สึกและคุณค่า", type:"F"},
+    {text:"สิ่งที่เคยเกิดขึ้นจริง", type:"S"},
+    {text:"ความเป็นไปได้ในอนาคต", type:"N"}
+  ]
+},
+{
+  question:"คุณชอบสภาพแวดล้อมแบบไหน?",
+  answers:[
+    {text:"มีคนเยอะ มีพลัง", type:"E"},
+    {text:"สงบ เป็นส่วนตัว", type:"I"},
+    {text:"มีระบบ ระเบียบ", type:"J"},
+    {text:"อิสระ ไม่ตายตัว", type:"P"}
+  ]
+},
+{
+  question:"เวลาคุณเรียนรู้สิ่งใหม่ คุณจะ?",
+  answers:[
+    {text:"ลองทำจริง", type:"S"},
+    {text:"คิดภาพรวมก่อน", type:"N"},
+    {text:"ถามคนอื่น", type:"E"},
+    {text:"ศึกษาเองเงียบๆ", type:"I"}
+  ]
+},
+{
+  question:"อะไรอธิบายตัวคุณได้ดีที่สุด?",
+  answers:[
+    {text:"มีระบบ ระเบียบ ชัดเจน", type:"J"},
+    {text:"ยืดหยุ่น ปรับตัวเก่ง", type:"P"},
+    {text:"คิดเป็นเหตุเป็นผล", type:"T"},
+    {text:"เข้าใจความรู้สึกคน", type:"F"}
+  ]
+},{
+  question:"เวลาคุณต้องเรียนรู้สิ่งใหม่ที่ยาก คุณจะเริ่มยังไง?",
+  answers:[
+    {text:"ลงมือทดลองด้วยตัวเองทันที", type:"S"},
+    {text:"คิดภาพรวมก่อนว่ามันเชื่อมโยงอะไรได้บ้าง", type:"N"},
+    {text:"หาข้อมูลและวิเคราะห์อย่างมีเหตุผล", type:"T"},
+    {text:"ถามคนอื่นหรือเรียนรู้ผ่านการพูดคุย", type:"E"}
+  ]
+},
+{
+  question:"คุณรู้สึกสบายใจที่สุดเมื่อ?",
+  answers:[
+    {text:"ได้อยู่คนเดียวกับความคิดตัวเอง", type:"I"},
+    {text:"ได้พูดคุยกับผู้คน", type:"E"},
+    {text:"ทุกอย่างมีแผนและควบคุมได้", type:"J"},
+    {text:"สามารถเปลี่ยนแผนได้ตลอด", type:"P"}
+  ]
+},
+{
+  question:"เมื่อมีปัญหาเกิดขึ้นแบบไม่คาดคิด คุณจะ?",
+  answers:[
+    {text:"รีบวิเคราะห์หาทางแก้", type:"T"},
+    {text:"คิดถึงผลกระทบต่อคนอื่นก่อน", type:"F"},
+    {text:"ใช้ประสบการณ์เดิมมาช่วย", type:"S"},
+    {text:"ลองคิดวิธีใหม่ๆ ที่ไม่เคยทำ", type:"N"}
+  ]
+},
+{
+  question:"คุณชอบคุยเรื่องแบบไหนมากกว่า?",
+  answers:[
+    {text:"เรื่องจริง เหตุการณ์ที่เกิดขึ้น", type:"S"},
+    {text:"ไอเดีย อนาคต หรือความเป็นไปได้", type:"N"},
+    {text:"วิเคราะห์เหตุผลหรือระบบ", type:"T"},
+    {text:"ความสัมพันธ์ ความรู้สึก", type:"F"}
+  ]
+},
+{
+  question:"เวลาทำงาน คุณให้ความสำคัญกับอะไร?",
+  answers:[
+    {text:"ความถูกต้องและมีเหตุผล", type:"T"},
+    {text:"ความรู้สึกของทีม", type:"F"},
+    {text:"ขั้นตอนและระบบที่ชัดเจน", type:"J"},
+    {text:"ความยืดหยุ่นและอิสระ", type:"P"}
+  ]
+},
+{
+  question:"คุณเป็นคนตัดสินใจเร็วหรือช้า?",
+  answers:[
+    {text:"เร็วและเด็ดขาด", type:"J"},
+    {text:"ช้า เพราะคิดหลายทางเลือก", type:"P"},
+    {text:"เร็วเมื่อมีข้อมูลพอ", type:"T"},
+    {text:"ช้าเพราะคำนึงถึงความรู้สึก", type:"F"}
+  ]
+},
+{
+  question:"เวลาคุณอยู่ในกลุ่มคนใหม่ คุณจะ?",
+  answers:[
+    {text:"เริ่มคุยก่อน", type:"E"},
+    {text:"รอดูสถานการณ์ก่อน", type:"I"},
+    {text:"สังเกตพฤติกรรมคนอื่น", type:"S"},
+    {text:"พยายามเข้าใจ vibe โดยรวม", type:"N"}
+  ]
+},
+{
+  question:"อะไรทำให้คุณรู้สึกมีพลัง?",
+  answers:[
+    {text:"การอยู่กับผู้คน", type:"E"},
+    {text:"การอยู่กับตัวเอง", type:"I"},
+    {text:"การได้ลงมือทำจริง", type:"S"},
+    {text:"การคิดไอเดียใหม่ๆ", type:"N"}
+  ]
+},
+{
+  question:"คุณชอบสไตล์การใช้ชีวิตแบบไหน?",
+  answers:[
+    {text:"มีแผนระยะยาวชัดเจน", type:"J"},
+    {text:"ใช้ชีวิตไปตามสถานการณ์", type:"P"},
+    {text:"เน้นสิ่งที่จับต้องได้จริง", type:"S"},
+    {text:"เน้นความหมายและเป้าหมายใหญ่", type:"N"}
+  ]
+},
+{
+  question:"ถ้ามีคนวิจารณ์คุณ คุณจะรู้สึกยังไง?",
+  answers:[
+    {text:"วิเคราะห์ว่ามีเหตุผลไหม", type:"T"},
+    {text:"รู้สึกก่อน แล้วค่อยคิด", type:"F"},
+    {text:"ดูจากข้อเท็จจริง", type:"S"},
+    {text:"มองภาพรวมว่ามีอะไรแฝง", type:"N"}
+  ]
+},
+{
+  question:"เวลาคุณต้องตัดสินใจเรื่องใหญ่ คุณจะทำยังไง?",
+  answers:[
+    {text:"วิเคราะห์ข้อมูลทุกด้านก่อนตัดสินใจ", type:"T"},
+    {text:"ฟังความรู้สึกตัวเองเป็นหลัก", type:"F"},
+    {text:"ดูจากประสบการณ์ที่ผ่านมา", type:"S"},
+    {text:"คิดถึงอนาคตและผลลัพธ์ระยะยาว", type:"N"}
+  ]
+},
+{
+  question:"คุณจัดการเวลายังไง?",
+  answers:[
+    {text:"วางแผนล่วงหน้าอย่างละเอียด", type:"J"},
+    {text:"ทำตามสถานการณ์", type:"P"},
+    {text:"จัดเวลาแบบมีโครงสร้าง", type:"J"},
+    {text:"ยืดหยุ่นตามอารมณ์และพลังงาน", type:"P"}
+  ]
+},
+{
+  question:"เวลาคุณมีไอเดียใหม่ คุณจะ?",
+  answers:[
+    {text:"ลองทำทันที", type:"S"},
+    {text:"ต่อยอดเป็นไอเดียใหญ่", type:"N"},
+    {text:"วิเคราะห์ว่าคุ้มไหม", type:"T"},
+    {text:"แชร์ให้คนอื่นฟัง", type:"E"}
+  ]
+},
+{
+  question:"คุณรับมือกับความเครียดยังไง?",
+  answers:[
+    {text:"อยู่เงียบๆ คนเดียว", type:"I"},
+    {text:"ไปคุยกับเพื่อน", type:"E"},
+    {text:"แก้ปัญหาให้จบเร็วๆ", type:"T"},
+    {text:"หาวิธีปลอบใจตัวเอง", type:"F"}
+  ]
+},
+{
+  question:"เวลาคุณเรียนหรือทำงาน คุณชอบแบบไหน?",
+  answers:[
+    {text:"มีขั้นตอนชัดเจน", type:"S"},
+    {text:"มีอิสระในการคิด", type:"N"},
+    {text:"มี deadline แน่นอน", type:"J"},
+    {text:"ยืดหยุ่น ไม่กดดัน", type:"P"}
+  ]
+},
+{
+  question:"คุณมองความสัมพันธ์ยังไง?",
+  answers:[
+    {text:"ต้องมีเหตุผลและความชัดเจน", type:"T"},
+    {text:"ต้องมีความเข้าใจและความรู้สึก", type:"F"},
+    {text:"ค่อยเป็นค่อยไป", type:"S"},
+    {text:"มองถึงอนาคตร่วมกัน", type:"N"}
+  ]
+},
+{
+  question:"คุณเป็นคนแบบไหนในกลุ่ม?",
+  answers:[
+    {text:"คนเริ่มบทสนทนา", type:"E"},
+    {text:"คนฟังและสังเกต", type:"I"},
+    {text:"คนจัดระเบียบ", type:"J"},
+    {text:"คนสร้างสีสัน", type:"P"}
+  ]
+},
+{
+  question:"คุณชอบอะไรในชีวิตมากที่สุด?",
+  answers:[
+    {text:"ความมั่นคง", type:"S"},
+    {text:"ความเป็นไปได้ใหม่ๆ", type:"N"},
+    {text:"ความสำเร็จและเป้าหมาย", type:"T"},
+    {text:"ความสัมพันธ์ที่ดี", type:"F"}
+  ]
+},
+{
+  question:"เวลาคุณทำผิด คุณจะ?",
+  answers:[
+    {text:"วิเคราะห์ว่าพลาดตรงไหน", type:"T"},
+    {text:"รู้สึกผิดและอยากแก้ไข", type:"F"},
+    {text:"ยึดตามสิ่งที่เคยทำ", type:"S"},
+    {text:"ลองวิธีใหม่ในครั้งต่อไป", type:"N"}
+  ]
+},
+{
+  question:"คุณใช้ชีวิตแบบไหนมากที่สุด?",
+  answers:[
+    {text:"มีแผนและเป้าหมายชัดเจน", type:"J"},
+    {text:"ไหลไปตามสถานการณ์", type:"P"},
+    {text:"ใช้เหตุผลนำทาง", type:"T"},
+    {text:"ใช้ความรู้สึกนำทาง", type:"F"}
+  ]
+}
+];
+
+
+function loadQ(){
+  const quiz = document.getElementById("quiz");
+  const q = questions[current];
+
+  document.getElementById("step").innerText =
+    `ข้อ ${current+1} / ${questions.length}`;
+
+  quiz.innerHTML = `<div class="question">${q.question}</div>`;
+
+  q.answers.forEach(a=>{
+    const div = document.createElement("div");
+    div.className = "answer";
+    div.innerText = a.text;
+
+    div.onclick = ()=>{
+      score[a.type]++;
+      current++;
+
+      document.getElementById("progress").style.width =
+        (current/questions.length)*100 + "%";
+
+      if(current < questions.length){
+        loadQ();
+      } else {
+        showResult();
+      }
+    };
+
+    quiz.appendChild(div);
+  });
+}
+
+function showResult(){
+  const type =
+    (score.E>score.I?"E":"I")+
+    (score.S>score.N?"S":"N")+
+    (score.T>score.F?"T":"F")+
+    (score.J>score.P?"J":"P");
+
+  window.location.href = "mbti-result.html?type=" + type;
+}
+
+loadQ();
+</script>
+
+</body>
+</html>
